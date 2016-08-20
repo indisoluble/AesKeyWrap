@@ -1,0 +1,534 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2AEF62455A55E439F30A25FE23EEA306 /* AesKeyWrap-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9004BF5CF8B543BAE7CF3090EDF46C97 /* AesKeyWrap-dummy.m */; };
+		319544E91962DBAB5A4A3E93E3170C3F /* AesKeyWrap-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E1DF3105D5FB2D928870FD39CF85AB86 /* AesKeyWrap-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4035A655281421A167E0C1AB8B606198 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
+		79D8F1AB25E78A1A97A9CDA5E981E01A /* ReplaceMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C286E80E0C3A8BA760D2180C4F7468F /* ReplaceMe.m */; };
+		9646D845ABC331CDD9309A22BCF28CF0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */; };
+		9A6E46EC219B091A2D2BDD1830983A2B /* Pods-AesKeyWrap_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F7103AC7F969F22E30B9B6D608711A /* Pods-AesKeyWrap_Tests-dummy.m */; };
+		DB289BB0200874B758F3F90A1B840415 /* Pods-AesKeyWrap_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A0413985FF91D442A1794C4046A2EF12 /* Pods-AesKeyWrap_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EB19A9B0D816C37F92DFF93648EE1CCA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 87237FE937A961FD3D29C830BC3868E2;
+			remoteInfo = AesKeyWrap;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1374DB6BE13F92813254BBFDF7CE7518 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1EDFC585490836C24051C255A39492C4 /* AesKeyWrap-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AesKeyWrap-prefix.pch"; sourceTree = "<group>"; };
+		2C6F1F416FED2159086E138F0D756F0F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C863596F3104D310EE4E3E46AD697E7 /* Pods-AesKeyWrap_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AesKeyWrap_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		522E10FA28A499B3FC5D709D036FC97A /* Pods_AesKeyWrap_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AesKeyWrap_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6702D39EC25215C2493D731A2B44BDF2 /* Pods-AesKeyWrap_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AesKeyWrap_Tests-resources.sh"; sourceTree = "<group>"; };
+		72AAF8F99DE0DF5AA396E553A6C9B1F7 /* Pods-AesKeyWrap_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-AesKeyWrap_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		7C286E80E0C3A8BA760D2180C4F7468F /* ReplaceMe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ReplaceMe.m; sourceTree = "<group>"; };
+		808CE93DE6A0EE7242A93F0A5E24E00C /* AesKeyWrap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AesKeyWrap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9004BF5CF8B543BAE7CF3090EDF46C97 /* AesKeyWrap-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AesKeyWrap-dummy.m"; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		96F7103AC7F969F22E30B9B6D608711A /* Pods-AesKeyWrap_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-AesKeyWrap_Tests-dummy.m"; sourceTree = "<group>"; };
+		9E14977B0CA967ECE9F397041683636A /* AesKeyWrap.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AesKeyWrap.xcconfig; sourceTree = "<group>"; };
+		A0413985FF91D442A1794C4046A2EF12 /* Pods-AesKeyWrap_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-AesKeyWrap_Tests-umbrella.h"; sourceTree = "<group>"; };
+		A3C4A73046B5F27768CC4F3043CCDB28 /* Pods-AesKeyWrap_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AesKeyWrap_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		CEFC5A82F42E3C067973A3BC6811F896 /* Pods-AesKeyWrap_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-AesKeyWrap_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		D2D48C894DBD888CD80352FB975C8E70 /* Pods-AesKeyWrap_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-AesKeyWrap_Tests.modulemap"; sourceTree = "<group>"; };
+		DFC0FE3E30B5B7F77424017191108B8D /* Pods-AesKeyWrap_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AesKeyWrap_Tests-frameworks.sh"; sourceTree = "<group>"; };
+		E1DF3105D5FB2D928870FD39CF85AB86 /* AesKeyWrap-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AesKeyWrap-umbrella.h"; sourceTree = "<group>"; };
+		F008DA614F8AA55C3A0FA66E8DEF0AB4 /* AesKeyWrap.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = AesKeyWrap.modulemap; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D58CEA3C2270E0AC7B0EA99CB5E3180 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9646D845ABC331CDD9309A22BCF28CF0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4B2FE73E25AF58A876AE3557ABD4644 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4035A655281421A167E0C1AB8B606198 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		25C73F28FBB1591CA0BDF5975A83D1C0 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				F008DA614F8AA55C3A0FA66E8DEF0AB4 /* AesKeyWrap.modulemap */,
+				9E14977B0CA967ECE9F397041683636A /* AesKeyWrap.xcconfig */,
+				9004BF5CF8B543BAE7CF3090EDF46C97 /* AesKeyWrap-dummy.m */,
+				1EDFC585490836C24051C255A39492C4 /* AesKeyWrap-prefix.pch */,
+				E1DF3105D5FB2D928870FD39CF85AB86 /* AesKeyWrap-umbrella.h */,
+				2C6F1F416FED2159086E138F0D756F0F /* Info.plist */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/AesKeyWrap";
+			sourceTree = "<group>";
+		};
+		3DCAB2B7CDE207B3958B6CB957FCC758 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CEC22C73C1608DFA5D5D78BDCB218219 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		436C09DA0957C50D153142FC0BF6823F /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				48073E542A6C904C7C89E3076F67841F /* AesKeyWrap */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		453C8085C1AAD4743D1CCAD18524BAD7 /* AesKeyWrap */ = {
+			isa = PBXGroup;
+			children = (
+				CB0FDBDD8806EEE7F54ABA8585EC166F /* Classes */,
+			);
+			path = AesKeyWrap;
+			sourceTree = "<group>";
+		};
+		48073E542A6C904C7C89E3076F67841F /* AesKeyWrap */ = {
+			isa = PBXGroup;
+			children = (
+				453C8085C1AAD4743D1CCAD18524BAD7 /* AesKeyWrap */,
+				25C73F28FBB1591CA0BDF5975A83D1C0 /* Support Files */,
+			);
+			name = AesKeyWrap;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				436C09DA0957C50D153142FC0BF6823F /* Development Pods */,
+				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				F98EEF5F9AAB86421779D89DFB171E4C /* Products */,
+				D5CD1DCFBCAB960FE1C2E1FA967D7E8E /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3DCAB2B7CDE207B3958B6CB957FCC758 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CB0FDBDD8806EEE7F54ABA8585EC166F /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				7C286E80E0C3A8BA760D2180C4F7468F /* ReplaceMe.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		D5CD1DCFBCAB960FE1C2E1FA967D7E8E /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				F9419EDD7DA2568CF592D72A7F6A1924 /* Pods-AesKeyWrap_Tests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		F9419EDD7DA2568CF592D72A7F6A1924 /* Pods-AesKeyWrap_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				1374DB6BE13F92813254BBFDF7CE7518 /* Info.plist */,
+				D2D48C894DBD888CD80352FB975C8E70 /* Pods-AesKeyWrap_Tests.modulemap */,
+				CEFC5A82F42E3C067973A3BC6811F896 /* Pods-AesKeyWrap_Tests-acknowledgements.markdown */,
+				72AAF8F99DE0DF5AA396E553A6C9B1F7 /* Pods-AesKeyWrap_Tests-acknowledgements.plist */,
+				96F7103AC7F969F22E30B9B6D608711A /* Pods-AesKeyWrap_Tests-dummy.m */,
+				DFC0FE3E30B5B7F77424017191108B8D /* Pods-AesKeyWrap_Tests-frameworks.sh */,
+				6702D39EC25215C2493D731A2B44BDF2 /* Pods-AesKeyWrap_Tests-resources.sh */,
+				A0413985FF91D442A1794C4046A2EF12 /* Pods-AesKeyWrap_Tests-umbrella.h */,
+				3C863596F3104D310EE4E3E46AD697E7 /* Pods-AesKeyWrap_Tests.debug.xcconfig */,
+				A3C4A73046B5F27768CC4F3043CCDB28 /* Pods-AesKeyWrap_Tests.release.xcconfig */,
+			);
+			name = "Pods-AesKeyWrap_Tests";
+			path = "Target Support Files/Pods-AesKeyWrap_Tests";
+			sourceTree = "<group>";
+		};
+		F98EEF5F9AAB86421779D89DFB171E4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				808CE93DE6A0EE7242A93F0A5E24E00C /* AesKeyWrap.framework */,
+				522E10FA28A499B3FC5D709D036FC97A /* Pods_AesKeyWrap_Tests.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		216BFA378D0696722C9CE29F5E8BCB8D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				319544E91962DBAB5A4A3E93E3170C3F /* AesKeyWrap-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B09ADF431F245B11669D4AD0D83BD9FB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB289BB0200874B758F3F90A1B840415 /* Pods-AesKeyWrap_Tests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2FDA92190984F8CF2BC60BEC5BAFB39E /* Pods-AesKeyWrap_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CAB7B54A183523860490E0D583E527B /* Build configuration list for PBXNativeTarget "Pods-AesKeyWrap_Tests" */;
+			buildPhases = (
+				ED003E7721C1B9D0B46972B69B73BE0A /* Sources */,
+				3D58CEA3C2270E0AC7B0EA99CB5E3180 /* Frameworks */,
+				B09ADF431F245B11669D4AD0D83BD9FB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				93943964393B0210DF5D0C203BA7D7DA /* PBXTargetDependency */,
+			);
+			name = "Pods-AesKeyWrap_Tests";
+			productName = "Pods-AesKeyWrap_Tests";
+			productReference = 522E10FA28A499B3FC5D709D036FC97A /* Pods_AesKeyWrap_Tests.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		87237FE937A961FD3D29C830BC3868E2 /* AesKeyWrap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC987ED74794E18AB71DE0D7C4982D2B /* Build configuration list for PBXNativeTarget "AesKeyWrap" */;
+			buildPhases = (
+				5B01839E1DF3B2FBC7D3D705DACF5F87 /* Sources */,
+				C4B2FE73E25AF58A876AE3557ABD4644 /* Frameworks */,
+				216BFA378D0696722C9CE29F5E8BCB8D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AesKeyWrap;
+			productName = AesKeyWrap;
+			productReference = 808CE93DE6A0EE7242A93F0A5E24E00C /* AesKeyWrap.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = F98EEF5F9AAB86421779D89DFB171E4C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				87237FE937A961FD3D29C830BC3868E2 /* AesKeyWrap */,
+				2FDA92190984F8CF2BC60BEC5BAFB39E /* Pods-AesKeyWrap_Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5B01839E1DF3B2FBC7D3D705DACF5F87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AEF62455A55E439F30A25FE23EEA306 /* AesKeyWrap-dummy.m in Sources */,
+				79D8F1AB25E78A1A97A9CDA5E981E01A /* ReplaceMe.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED003E7721C1B9D0B46972B69B73BE0A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A6E46EC219B091A2D2BDD1830983A2B /* Pods-AesKeyWrap_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		93943964393B0210DF5D0C203BA7D7DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AesKeyWrap;
+			target = 87237FE937A961FD3D29C830BC3868E2 /* AesKeyWrap */;
+			targetProxy = EB19A9B0D816C37F92DFF93648EE1CCA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0ACDCBCB0B6796575F46FFA2F5410C6B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		52887DFB1D766F632A283968F35B0A44 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3C4A73046B5F27768CC4F3043CCDB28 /* Pods-AesKeyWrap_Tests.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-AesKeyWrap_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-AesKeyWrap_Tests/Pods-AesKeyWrap_Tests.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_AesKeyWrap_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A936B5B0DA747E3D27E95D1F61CE6550 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E14977B0CA967ECE9F397041683636A /* AesKeyWrap.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/AesKeyWrap/AesKeyWrap-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/AesKeyWrap/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/AesKeyWrap/AesKeyWrap.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = AesKeyWrap;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		BEBA5A90B65F2F21C8FF8B352958297C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C863596F3104D310EE4E3E46AD697E7 /* Pods-AesKeyWrap_Tests.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-AesKeyWrap_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-AesKeyWrap_Tests/Pods-AesKeyWrap_Tests.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_AesKeyWrap_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D02F8F57079FB3D0043BA69EC96BA8B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E14977B0CA967ECE9F397041683636A /* AesKeyWrap.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/AesKeyWrap/AesKeyWrap-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/AesKeyWrap/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/AesKeyWrap/AesKeyWrap.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = AesKeyWrap;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D3E3D092A3FF7311A98E44BBA36FFD12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3E3D092A3FF7311A98E44BBA36FFD12 /* Debug */,
+				0ACDCBCB0B6796575F46FFA2F5410C6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9CAB7B54A183523860490E0D583E527B /* Build configuration list for PBXNativeTarget "Pods-AesKeyWrap_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BEBA5A90B65F2F21C8FF8B352958297C /* Debug */,
+				52887DFB1D766F632A283968F35B0A44 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DC987ED74794E18AB71DE0D7C4982D2B /* Build configuration list for PBXNativeTarget "AesKeyWrap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D02F8F57079FB3D0043BA69EC96BA8B4 /* Debug */,
+				A936B5B0DA747E3D27E95D1F61CE6550 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

@@ -1,15 +1,11 @@
 # AesKeyWrap
 
-[![CI Status](http://img.shields.io/travis/Enrique de la Torre/AesKeyWrap.svg?style=flat)](https://travis-ci.org/Enrique de la Torre/AesKeyWrap)
 [![Version](https://img.shields.io/cocoapods/v/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 [![License](https://img.shields.io/cocoapods/l/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
-[![Platform](https://img.shields.io/cocoapods/p/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+ObjC implementation of the AES Key Wrap with Padding Algorithm described in
+[RFC 3394](https://tools.ietf.org/html/rfc3394) &
+[RFC 5649](https://tools.ietf.org/html/rfc5649).
 
 ## Installation
 
@@ -19,10 +15,6 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "AesKeyWrap"
 ```
-
-## Author
-
-Enrique de la Torre, indisoluble_dev@me.com
 
 ## License
 

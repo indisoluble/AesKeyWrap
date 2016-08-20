@@ -1,0 +1,16 @@
+PODS:
+  - AesKeyWrap (0.1.0)
+
+DEPENDENCIES:
+  - AesKeyWrap (from `../`)
+
+EXTERNAL SOURCES:
+  AesKeyWrap:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AesKeyWrap: 285f36fc7f64d38b7c0ae07fb18faadc80e98e90
+
+PODFILE CHECKSUM: 24080b8855f47121816fddeedf3dbedff748ec46
+
+COCOAPODS: 1.0.1

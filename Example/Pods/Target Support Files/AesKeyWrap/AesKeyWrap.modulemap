@@ -1,0 +1,6 @@
+framework module AesKeyWrap {
+  umbrella header "AesKeyWrap-umbrella.h"
+
+  export *
+  module * { export * }
+}
