@@ -1,0 +1,6 @@
+use_frameworks!
+target 'AesKeyWrap_Tests' do
+  pod 'AesKeyWrap', :path => '../'
+  
+  
+end
