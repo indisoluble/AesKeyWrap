@@ -388,7 +388,6 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     // 2) Check that 8*(n-1) < LSB(32,A) <= 8*n.  If so, let MLI = LSB(32,A).
     AKWAesKeyWrapUInt32BitType mli  = [AKWAesKeyWrap messageLengthIndicatorInAlternativeInitialValue:aiv];
 
-    AKWAesKeyWrapSizeType n = (length / sizeof(AKWAesKeyWrap64BitRawValueType));
     AKWAesKeyWrapSizeType lowerLimit = (length - sizeof(AKWAesKeyWrap64BitRawValueType));
 
     if ((mli > length) || (mli <= lowerLimit))
