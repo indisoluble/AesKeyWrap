@@ -16,6 +16,28 @@ it, simply add the following line to your Podfile:
 pod "AesKeyWrap"
 ```
 
+## Usage
+
+```objc
+#import <CommonCrypto/CommonCryptor.h>
+
+#import "AKWAesKeyWrap.h"
+
+u_char buffer[kCCKeySizeAES192] = {...};
+NSData *keyEncryptionKey = [NSData dataWithBytes:buffer length:kCCKeySizeAES192];
+
+NSString *txt = @"Some text";
+
+NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:[txt dataUsingEncoding:NSUTF8StringEncoding]
+                                                 withKeyEncryptionKey:keyEncryptionKey
+                                                                error:nil];
+NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
+                                                withKeyEncryptionKey:keyEncryptionKey
+                                                               error:nil];
+
+XCTAssertEqualObjects([txt dataUsingEncoding:NSUTF8StringEncoding], plainData);
+```
+
 ## License
 
 AesKeyWrap is available under the MIT license. See the LICENSE file for more info.
