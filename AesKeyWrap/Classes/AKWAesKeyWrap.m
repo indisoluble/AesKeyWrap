@@ -64,7 +64,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     }
 
     // 1) Append padding & Initialize variables.
-    AKWAesKeyWrapUInt32BitType mli = plainData.length;
+    AKWAesKeyWrapUInt32BitType mli = (AKWAesKeyWrapUInt32BitType)plainData.length;
 
     // Set A0 to an initial value
     AKWAesKeyWrap64BitRawValueType a;
@@ -88,7 +88,8 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     [AKWAesKeyWrap getPaddedBytes:paddedBytes withLength:paddedBytesSize fromData:plainData];
 
     // 2) Calculate intermediate values.
-    AKWAesKeyWrapUInt32BitType n = (paddedBytesSize / sizeof(AKWAesKeyWrap64BitRawValueType));
+    AKWAesKeyWrapUInt32BitType n = (AKWAesKeyWrapUInt32BitType)(paddedBytesSize /
+                                                                sizeof(AKWAesKeyWrap64BitRawValueType));
 
     if (n == 1)
     {
@@ -201,7 +202,8 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     memcpy(paddedBytes, cipheredData.bytes + sizeof(AKWAesKeyWrap64BitRawValueType), paddedBytesSize);
 
     // 2) Compute intermediate values.
-    AKWAesKeyWrapUInt32BitType n = (paddedBytesSize / sizeof(AKWAesKeyWrap64BitRawValueType));
+    AKWAesKeyWrapUInt32BitType n = (AKWAesKeyWrapUInt32BitType)(paddedBytesSize /
+                                                                sizeof(AKWAesKeyWrap64BitRawValueType));
 
     if (n == 1)
     {
