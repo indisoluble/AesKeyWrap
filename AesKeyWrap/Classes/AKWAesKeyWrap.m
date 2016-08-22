@@ -433,7 +433,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
                andLeastSignificant32BitValue:(AKWAesKeyWrap8BitRawValueType *)&swapped];
 }
 
-+ (AKWAesKeyWrapUInt32BitType *)messageLengthIndicatorInAlternativeInitialValue:(AKWAesKeyWrap64BitRawValueType)aiv
++ (AKWAesKeyWrapUInt32BitType)messageLengthIndicatorInAlternativeInitialValue:(AKWAesKeyWrap64BitRawValueType)aiv
 {
     AKWAesKeyWrapUInt32BitType uint32Value;
     [AKWAesKeyWrap getLeastSignificant32BitValue:(AKWAesKeyWrap8BitRawValueType *)&uint32Value
