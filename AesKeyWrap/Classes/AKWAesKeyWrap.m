@@ -326,7 +326,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         return NO;
     }
 
-    if (cipheredData.length > kPlainDataMaxSize)
+    if (cipheredData.length > kCipheredDataMaxSize)
     {
         if (error)
         {
