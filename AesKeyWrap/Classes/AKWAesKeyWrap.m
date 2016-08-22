@@ -429,14 +429,15 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     AKWAesKeyWrapUInt32BitType swapped = CFSwapInt32HostToBig(mli);
 
     [AKWAesKeyWrap get64BitConcatenatedValue:aiv
-               withMostSignificant32BitValue:kAIV32BitConstant
-               andLeastSignificant32BitValue:&swapped];
+               withMostSignificant32BitValue:(AKWAesKeyWrap8BitRawValueType *)kAIV32BitConstant
+               andLeastSignificant32BitValue:(AKWAesKeyWrap8BitRawValueType *)&swapped];
 }
 
 + (AKWAesKeyWrapUInt32BitType *)messageLengthIndicatorInAlternativeInitialValue:(AKWAesKeyWrap64BitRawValueType)aiv
 {
     AKWAesKeyWrapUInt32BitType uint32Value;
-    [AKWAesKeyWrap getLeastSignificant32BitValue:&uint32Value in64BitValue:aiv];
+    [AKWAesKeyWrap getLeastSignificant32BitValue:(AKWAesKeyWrap8BitRawValueType *)&uint32Value
+                                    in64BitValue:aiv];
 
     return CFSwapInt32BigToHost(uint32Value);
 }

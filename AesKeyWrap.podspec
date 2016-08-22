@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'AesKeyWrap'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'AES Key Wrap with Padding Algorithm (RFC 3394 & RFC 5649).'
 
   s.description      = <<-DESC
