@@ -14,17 +14,24 @@ NSString * const AKWErrorFactoryDomain = @"AKWErrorFactoryDomain";
 
 #pragma mark - Public class methods
 
-+ (NSError *)errorEmptyData
++ (NSError *)errorInputDataTooSmall
 {
     return [NSError errorWithDomain:AKWErrorFactoryDomain
-                               code:AKWErrorFactoryTypeEmptyData
+                               code:AKWErrorFactoryTypeInputDataTooSmall
                            userInfo:nil];
 }
 
-+ (NSError *)errorDataOverSizeLimit
++ (NSError *)errorInputDataTooBig
 {
     return [NSError errorWithDomain:AKWErrorFactoryDomain
-                               code:AKWErrorFactoryTypeDataOverSizeLimit
+                               code:AKWErrorFactoryTypeInputDataTooBig
+                           userInfo:nil];
+}
+
++ (NSError *)errorInputDataNotAlignedProperly
+{
+    return [NSError errorWithDomain:AKWErrorFactoryDomain
+                               code:AKWErrorFactoryTypeInputDataNotAlignedProperly
                            userInfo:nil];
 }
 
@@ -46,6 +53,13 @@ NSString * const AKWErrorFactoryDomain = @"AKWErrorFactoryDomain";
 {
     return [NSError errorWithDomain:AKWErrorFactoryDomain
                                code:AKWErrorFactoryTypeOverflow
+                           userInfo:nil];
+}
+
++ (NSError *)errorIntegrityCheckingOfAlternativeInitialValueFailed
+{
+    return [NSError errorWithDomain:AKWErrorFactoryDomain
+                               code:AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed
                            userInfo:nil];
 }
 

@@ -9,11 +9,13 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, AKWErrorFactoryType) {
-    AKWErrorFactoryTypeEmptyData = 0,
-    AKWErrorFactoryTypeDataOverSizeLimit,
+    AKWErrorFactoryTypeInputDataTooSmall = 0,
+    AKWErrorFactoryTypeInputDataTooBig,
+    AKWErrorFactoryTypeInputDataNotAlignedProperly,
     AKWErrorFactoryTypeInvalidKeyEncryptionKey,
     AKWErrorFactoryTypeEncryptionFailed,
-    AKWErrorFactoryTypeOverflow
+    AKWErrorFactoryTypeOverflow,
+    AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,11 +24,13 @@ extern NSString * const AKWErrorFactoryDomain;
 
 @interface AKWErrorFactory : NSObject
 
-+ (NSError *)errorEmptyData;
-+ (NSError *)errorDataOverSizeLimit;
++ (NSError *)errorInputDataTooSmall;
++ (NSError *)errorInputDataTooBig;
++ (NSError *)errorInputDataNotAlignedProperly;
 + (NSError *)errorInvalidKeyEncryptionKey;
 + (NSError *)errorEncryptionFailed;
 + (NSError *)errorOverflow;
++ (NSError *)errorIntegrityCheckingOfAlternativeInitialValueFailed;
 
 @end
 
