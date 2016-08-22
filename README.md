@@ -1,5 +1,6 @@
 # AesKeyWrap
 
+[![CI Status](http://img.shields.io/travis/indisoluble/AesKeyWrap.svg?style=flat)](https://travis-ci.org/indisoluble/AesKeyWrap)
 [![Version](https://img.shields.io/cocoapods/v/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 [![License](https://img.shields.io/cocoapods/l/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 
