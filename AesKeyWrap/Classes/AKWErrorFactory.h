@@ -9,18 +9,29 @@
 #import <Foundation/Foundation.h>
 
 /**
- List and factory of possible errors during ciphering/deciphering process
+ List possible errors during ciphering/deciphering process
  */
 
 typedef NS_ENUM(NSInteger, AKWErrorFactoryType) {
+    /** @see [AKWErrorFactory errorInputDataTooSmall] */
     AKWErrorFactoryTypeInputDataTooSmall = 0,
+    /** @see [AKWErrorFactory errorInputDataTooBig] */
     AKWErrorFactoryTypeInputDataTooBig,
+    /** @see [AKWErrorFactory errorInputDataNotAlignedProperly] */
     AKWErrorFactoryTypeInputDataNotAlignedProperly,
+    /** @see [AKWErrorFactory errorInvalidKeyEncryptionKey] */
     AKWErrorFactoryTypeInvalidKeyEncryptionKey,
+    /** @see [AKWErrorFactory errorEncryptionFailed] */
     AKWErrorFactoryTypeEncryptionFailed,
+    /** @see [AKWErrorFactory errorOverflow] */
     AKWErrorFactoryTypeOverflow,
+    /** @see [AKWErrorFactory errorIntegrityCheckingOfAlternativeInitialValueFailed] */
     AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed
 };
+
+/**
+ Factory of possible errors during ciphering/deciphering process
+ */
 
 NS_ASSUME_NONNULL_BEGIN
 
