@@ -3,6 +3,7 @@
 [![CI Status](http://img.shields.io/travis/indisoluble/AesKeyWrap.svg?style=flat)](https://travis-ci.org/indisoluble/AesKeyWrap)
 [![codecov.io](https://codecov.io/github/indisoluble/AesKeyWrap/coverage.svg?branch=master)](https://codecov.io/github/indisoluble/AesKeyWrap?branch=master)
 [![Version](https://img.shields.io/cocoapods/v/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
+[![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/AesKeyWrap.svg)](http://cocoadocs.org/docsets/AesKeyWrap)
 [![License](https://img.shields.io/cocoapods/l/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 
 ObjC implementation of the AES Key Wrap with Padding Algorithm described in
