@@ -25,23 +25,32 @@ static const AKWAesKeyWrapUInt64BitType kUInt64BitMax = UINT64_MAX;
 static const AKWAesKeyWrapUInt32BitType kUInt32BitMax = UINT32_MAX;
 static const AKWAesKeyWrapSizeType kSizeMax = SIZE_T_MAX;
 
-// The input key data may be as short as one octet, which will result in an
-// output of two 64-bit blocks (or 16 octets)
-static const AKWAesKeyWrapUInt32BitType kPlainDataMinSize = 1;
-// The use of a 32-bit fixed field to carry the octet length of the key data
-// bounds the size of the input at 2^32 octets
-static const AKWAesKeyWrapUInt32BitType kPlainDataMaxSize = kUInt32BitMax;
+// RFC 3394: The only restriction the key wrap algorithm places on n is that n be
+// at least two
+static const AKWAesKeyWrapUInt32BitType kPlainDataMinSize = (2  * sizeof(AKWAesKeyWrap64BitRawValueType));
+static const AKWAesKeyWrapUInt32BitType kCipheredDataMinSize = (sizeof(AKWAesKeyWrap64BitRawValueType) + kPlainDataMinSize);
 
-// Min size = <Alternative Initial Value> + <64-bit ciphertext data block>
-static const AKWAesKeyWrapUInt32BitType kCipheredDataMinSize = (sizeof(AKWAesKeyWrap64BitRawValueType) +
-                                                                sizeof(AKWAesKeyWrap64BitRawValueType));
-// Max size = <Alternative Initial Value>  + <64-bit ciphertext data block> + ... + <64-bit ciphertext data block with padding>
-static const AKWAesKeyWrapUInt64BitType kCipheredDataMaxSize = ((AKWAesKeyWrapUInt64BitType)sizeof(AKWAesKeyWrap64BitRawValueType) +
-                                                                (AKWAesKeyWrapUInt64BitType)kPlainDataMaxSize +
-                                                                (AKWAesKeyWrapUInt64BitType)(sizeof(AKWAesKeyWrap64BitRawValueType) -
-                                                                                             (kPlainDataMaxSize % sizeof(AKWAesKeyWrap64BitRawValueType))));
+// RFC 5649: The input key data may be as short as one octet, which will result in an
+// output of two 64-bit blocks (or 16 octets)
+static const AKWAesKeyWrapUInt32BitType kWrapWithPaddingPlainDataMinSize = 1;
+// RFC 5649: The use of a 32-bit fixed field to carry the octet length of the key data
+// bounds the size of the input at 2^32 octets
+static const AKWAesKeyWrapUInt32BitType kWrapWithPaddingPlainDataMaxSize = kUInt32BitMax;
+
+// RFC 5649: Min size = <Alternative Initial Value> + <64-bit ciphertext data block>
+static const AKWAesKeyWrapUInt32BitType kWrapWithPaddingCipheredDataMinSize = (sizeof(AKWAesKeyWrap64BitRawValueType) +
+                                                                               sizeof(AKWAesKeyWrap64BitRawValueType));
+// RFC 5649: Max size = <Alternative Initial Value>  +
+//                      <64-bit ciphertext data block> + ... +
+//                      <64-bit ciphertext data block with padding>
+static const AKWAesKeyWrapUInt64BitType kWrapWithPaddingCipheredDataMaxSize = ((AKWAesKeyWrapUInt64BitType)sizeof(AKWAesKeyWrap64BitRawValueType) +
+                                                                               (AKWAesKeyWrapUInt64BitType)kWrapWithPaddingPlainDataMaxSize +
+                                                                               (AKWAesKeyWrapUInt64BitType)(sizeof(AKWAesKeyWrap64BitRawValueType) -
+                                                                                                            (kWrapWithPaddingPlainDataMaxSize %
+                                                                                                             sizeof(AKWAesKeyWrap64BitRawValueType))));
 
 static const AKWAesKeyWrapUInt32BitType kTimesIntermediateValuesAreCalculated = 6;
+static const AKWAesKeyWrap64BitRawValueType kIVConstant = {0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6, 0xA6};
 static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x59, 0xA6};
 
 @implementation AKWAesKeyWrap
@@ -53,25 +62,71 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
                                                error:(NSError **)error
 {
     // 0) Check input
-    if (![AKWAesKeyWrap isPlainDataValid:plainData error:error])
+    if (![AKWAesKeyWrap canPlainDataBeWrapped:plainData error:error])
     {
         return nil;
     }
 
-    if (![AKWAesKeyWrap isKeyEncryptionKeyValid:kek error:error])
+    // 1) Cipher padded plain data
+    return [AKWAesKeyWrap cipheredDataByWrappingPaddedPlainBytes:plainData.bytes
+                                                      withLength:plainData.length
+                                           usingKeyEncryptionKey:kek
+                                                    initialValue:kIVConstant
+                                                           error:error];
+}
+
++ (nullable NSData *)plainDataByUnwrappingCipheredData:(NSData *)cipheredData
+                                  withKeyEncryptionKey:(NSData *)kek
+                                                 error:(NSError **)error
+{
+    // 0) Check input
+    if (![AKWAesKeyWrap canCipheredDataBeUnwrapped:cipheredData error:error])
     {
         return nil;
     }
 
-    // 1) Append padding & Initialize variables.
+    // 1) Decipher data
+    AKWAesKeyWrap64BitRawValueType iv;
+    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:cipheredData.bytes
+                                                                     withLength:cipheredData.length
+                                                          usingKeyEncryptionKey:kek
+                                                          returningInitialValue:iv
+                                                                          error:error];
+    if (!plainData)
+    {
+        return nil;
+    }
+
+    // 2) Output results.
+    if (memcmp(iv, kIVConstant, sizeof(AKWAesKeyWrap64BitRawValueType)) != 0)
+    {
+        if (error)
+        {
+            *error = [AKWErrorFactory errorIntegrityCheckingOfInitialValueFailed];
+        }
+
+        return nil;
+    }
+
+    return plainData;
+}
+
++ (nullable NSData *)cipheredDataByWrappingWithPaddingPlainData:(NSData *)plainData
+                                          usingKeyEncryptionKey:(NSData *)kek
+                                                          error:(NSError **)error
+{
+    // 0) Check input
+    if (![AKWAesKeyWrap canPlainDataBeWrappedWithPadding:plainData error:error])
+    {
+        return nil;
+    }
+
+    // 1) Prepare padded plain data
     AKWAesKeyWrapUInt32BitType mli = (AKWAesKeyWrapUInt32BitType)plainData.length;
 
-    // Set A0 to an initial value
-    AKWAesKeyWrap64BitRawValueType a;
-    [AKWAesKeyWrap getAlternativeInitialValue:a withMessageLengthIndicator:mli];
+    AKWAesKeyWrap64BitRawValueType aiv;
+    [AKWAesKeyWrap getAlternativeInitialValue:aiv withMessageLengthIndicator:mli];
 
-    // For i = 1 to n
-    //     R[i] = P[i]
     AKWAesKeyWrapUInt32BitType padding = [AKWAesKeyWrap paddingForMessageLengthIndicator:mli];
     if ([AKWAesKeyWrap doesSizeOverflowByByAddingUInt32:mli toUInt32:padding])
     {
@@ -87,9 +142,81 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     AKWAesKeyWrap8BitRawValueType paddedBytes[paddedBytesSize];
     [AKWAesKeyWrap getPaddedBytes:paddedBytes withLength:paddedBytesSize fromData:plainData];
 
+    // 2) Cipher padded plain data
+    return [AKWAesKeyWrap cipheredDataByWrappingPaddedPlainBytes:paddedBytes
+                                                      withLength:paddedBytesSize
+                                           usingKeyEncryptionKey:kek
+                                                    initialValue:aiv
+                                                           error:error];
+}
+
++ (nullable NSData *)plainDataByUnwrappingWithPaddingCipheredData:(NSData *)cipheredData
+                                            usingKeyEncryptionKey:(NSData *)kek
+                                                            error:(NSError **)error
+{
+    // 0) Check input
+    if (![AKWAesKeyWrap canCipheredDataBeUnwrappedWithPadding:cipheredData error:error])
+    {
+        return nil;
+    }
+
+    // 1) Decipher data
+    AKWAesKeyWrap64BitRawValueType aiv;
+    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:cipheredData.bytes
+                                                                     withLength:cipheredData.length
+                                                          usingKeyEncryptionKey:kek
+                                                          returningInitialValue:aiv
+                                                                          error:error];
+    if (!plainData)
+    {
+        return nil;
+    }
+
+    // 2) Output results.
+    // If A is an appropriate initial value
+    if (![AKWAesKeyWrap alternativeInitialValue:aiv
+                          isValidForPaddedBytes:plainData.bytes
+                                     withLength:plainData.length
+                                          error:error])
+    {
+        return nil;
+    }
+
+    // Let m = the MLI value extracted from A.
+    // Let P = P[1] | P[2] | ... | P[n].
+    // For i = 1, ... , m
+    //     Q[i] = LSB(8, MSB(8*i, P))
+    AKWAesKeyWrapUInt32BitType mli = [AKWAesKeyWrap messageLengthIndicatorInAlternativeInitialValue:aiv];
+
+    return [plainData subdataWithRange:NSMakeRange(0, mli)];
+}
+
+#pragma mark - Private class methods
+
++ (nullable NSData *)cipheredDataByWrappingPaddedPlainBytes:(AKWAesKeyWrap8BitRawValueType *)paddedPlainBytes
+                                                 withLength:(AKWAesKeyWrapSizeType)paddedPlainBytesLength
+                                      usingKeyEncryptionKey:(NSData *)kek
+                                               initialValue:(AKWAesKeyWrap64BitRawValueType)iv
+                                                      error:(NSError **)error
+{
+    // 0) Check input
+    if (![AKWAesKeyWrap isKeyEncryptionKeyValid:kek error:error])
+    {
+        return nil;
+    }
+
+    // 1) Initialize variables.
+    // Set A0 to an initial value
+    AKWAesKeyWrap64BitRawValueType a;
+    memcpy(a, iv, sizeof(AKWAesKeyWrap64BitRawValueType));
+
+    // For i = 1 to n
+    //     R[i] = P[i]
+    AKWAesKeyWrap8BitRawValueType r[paddedPlainBytesLength];
+    memcpy(r, paddedPlainBytes, paddedPlainBytesLength);
+
     // 2) Calculate intermediate values.
-    AKWAesKeyWrapUInt32BitType n = (AKWAesKeyWrapUInt32BitType)(paddedBytesSize /
-                                                                sizeof(AKWAesKeyWrap64BitRawValueType));
+    AKWAesKeyWrapSizeType n = (paddedPlainBytesLength / sizeof(AKWAesKeyWrap64BitRawValueType));
 
     if (n == 1)
     {
@@ -97,7 +224,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         AKWAesKeyWrap128BitRawValueType b;
         if (![AKWAesKeyWrap get128BitCipheredValue:b
              byEncryptingMostSignificant64BitValue:a
-                     andLeastSignificant64BitValue:paddedBytes
+                     andLeastSignificant64BitValue:r
                                            withKek:kek
                                              error:error])
         {
@@ -105,7 +232,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         }
 
         [AKWAesKeyWrap getMostSignificant64BitValue:a in128BitValue:b];
-        [AKWAesKeyWrap getLeastSignificant64BitValue:paddedBytes in128BitValue:b];
+        [AKWAesKeyWrap getLeastSignificant64BitValue:r in128BitValue:b];
     }
     else
     {
@@ -115,13 +242,12 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         for (AKWAesKeyWrapUInt32BitType j = 0; j < kTimesIntermediateValuesAreCalculated; j++)
         {
             // For i=1 to n
-            for (AKWAesKeyWrapUInt32BitType i = 0; i < n; i++)
+            for (AKWAesKeyWrapSizeType i = 0; i < n; i++)
             {
                 // B = AES(K, A | R[i])
                 AKWAesKeyWrap128BitRawValueType b;
 
-                AKWAesKeyWrap8BitRawValueType *ri = (paddedBytes +
-                                                     (i * sizeof(AKWAesKeyWrap64BitRawValueType)));
+                AKWAesKeyWrap8BitRawValueType *ri = (r + (i * sizeof(AKWAesKeyWrap64BitRawValueType)));
                 if (![AKWAesKeyWrap get128BitCipheredValue:b
                      byEncryptingMostSignificant64BitValue:a
                              andLeastSignificant64BitValue:ri
@@ -139,14 +265,14 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
                 if (![AKWAesKeyWrap get64BitValue:t
                              byMultipliyingUInt32:n
                                        withUInt32:j
-                                  andAddingUInt32:(i + 1)
+                                    andAddingSize:(i + 1)
                                             error:error])
                 {
                     return nil;
                 }
 
                 [AKWAesKeyWrap get64BitXorValue:a with64BitValue:msb and64BitValue:t];
-                
+
                 // R[i] = LSB(64, B)
                 [AKWAesKeyWrap getLeastSignificant64BitValue:ri in128BitValue:b];
             }
@@ -159,21 +285,18 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     //     C[i] = R[i]
     NSMutableData *cipheredData = [NSMutableData dataWithBytes:a
                                                         length:sizeof(AKWAesKeyWrap64BitRawValueType)];
-    [cipheredData appendBytes:paddedBytes length:paddedBytesSize];
-
+    [cipheredData appendBytes:r length:paddedPlainBytesLength];
+    
     return cipheredData;
 }
 
-+ (nullable NSData *)plainDataByUnwrappingCipheredData:(NSData *)cipheredData
-                                  withKeyEncryptionKey:(NSData *)kek
-                                                 error:(NSError **)error
++ (nullable NSData *)paddedPlainDataByUnwrappingCipheredBytes:(AKWAesKeyWrap8BitRawValueType *)cipheredBytes
+                                                   withLength:(AKWAesKeyWrapSizeType)cipheredBytesLength
+                                        usingKeyEncryptionKey:(NSData *)kek
+                                        returningInitialValue:(AKWAesKeyWrap64BitRawValueType)iv
+                                                        error:(NSError **)error
 {
     // 0) Check input
-    if (![AKWAesKeyWrap isCipheredDataValid:cipheredData error:error])
-    {
-        return nil;
-    }
-
     if (![AKWAesKeyWrap isKeyEncryptionKeyValid:kek error:error])
     {
         return nil;
@@ -182,28 +305,17 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     // 1) Initialize variables.
     // Set A = C[0]
     AKWAesKeyWrap64BitRawValueType a;
-    memcpy(a, cipheredData.bytes, sizeof(AKWAesKeyWrap64BitRawValueType));
+    memcpy(a, cipheredBytes, sizeof(AKWAesKeyWrap64BitRawValueType));
 
     // For i = 1 to n
     //     R[i] = C[i]
-    if ([AKWAesKeyWrap doesSizeOverflowByBySubtractingUInt32:sizeof(AKWAesKeyWrap64BitRawValueType)
-                                                    toUInt64:cipheredData.length])
-    {
-        if (error)
-        {
-            *error = [AKWErrorFactory errorOverflow];
-        }
+    AKWAesKeyWrapSizeType length = (cipheredBytesLength - sizeof(AKWAesKeyWrap64BitRawValueType));
 
-        return nil;
-    }
-    AKWAesKeyWrapSizeType paddedBytesSize = (cipheredData.length - sizeof(AKWAesKeyWrap64BitRawValueType));
-
-    AKWAesKeyWrap8BitRawValueType paddedBytes[paddedBytesSize];
-    memcpy(paddedBytes, cipheredData.bytes + sizeof(AKWAesKeyWrap64BitRawValueType), paddedBytesSize);
+    AKWAesKeyWrap8BitRawValueType r[length];
+    memcpy(r, cipheredBytes + sizeof(AKWAesKeyWrap64BitRawValueType), length);
 
     // 2) Compute intermediate values.
-    AKWAesKeyWrapUInt32BitType n = (AKWAesKeyWrapUInt32BitType)(paddedBytesSize /
-                                                                sizeof(AKWAesKeyWrap64BitRawValueType));
+    AKWAesKeyWrapSizeType n = (length / sizeof(AKWAesKeyWrap64BitRawValueType));
 
     if (n == 1)
     {
@@ -214,7 +326,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
         if (![AKWAesKeyWrap get128BitDecipheredValue:b
                byDecryptingMostSignificant64BitValue:a
-                       andLeastSignificant64BitValue:paddedBytes
+                       andLeastSignificant64BitValue:r
                                              withKek:kek
                                                error:error])
         {
@@ -222,7 +334,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         }
 
         [AKWAesKeyWrap getMostSignificant64BitValue:a in128BitValue:b];
-        [AKWAesKeyWrap getLeastSignificant64BitValue:paddedBytes in128BitValue:b];
+        [AKWAesKeyWrap getLeastSignificant64BitValue:r in128BitValue:b];
     }
     else
     {
@@ -232,14 +344,14 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         for (AKWAesKeyWrapUInt32BitType j = kTimesIntermediateValuesAreCalculated; j > 0; j--)
         {
             // For i = n to 1
-            for (AKWAesKeyWrapUInt32BitType i = n; i > 0; i--)
+            for (AKWAesKeyWrapSizeType i = n; i > 0; i--)
             {
                 // B = AES-1(K, (A ^ t) | R[i]) where t = n*j+i
                 AKWAesKeyWrap64BitRawValueType t;
                 if (![AKWAesKeyWrap get64BitValue:t
                              byMultipliyingUInt32:n
                                        withUInt32:(j - 1)
-                                  andAddingUInt32:i
+                                    andAddingSize:i
                                             error:error])
                 {
                     return nil;
@@ -250,8 +362,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
                 AKWAesKeyWrap128BitRawValueType b;
 
-                AKWAesKeyWrap8BitRawValueType *ri = (paddedBytes +
-                                                     ((i - 1) * sizeof(AKWAesKeyWrap64BitRawValueType)));
+                AKWAesKeyWrap8BitRawValueType *ri = (r + ((i - 1) * sizeof(AKWAesKeyWrap64BitRawValueType)));
                 if (![AKWAesKeyWrap get128BitDecipheredValue:b
                        byDecryptingMostSignificant64BitValue:xorValue
                                andLeastSignificant64BitValue:ri
@@ -263,7 +374,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
                 // A = MSB(64, B)
                 [AKWAesKeyWrap getMostSignificant64BitValue:a in128BitValue:b];
-                
+
                 // R[i] = LSB(64, B)
                 [AKWAesKeyWrap getLeastSignificant64BitValue:ri in128BitValue:b];
             }
@@ -271,27 +382,12 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     }
 
     // 3) Output results.
-    // If A is an appropriate initial value
-    if (![AKWAesKeyWrap alternativeInitialValue:a
-                          isValidForPaddedBytes:paddedBytes
-                                     withLength:paddedBytesSize
-                                          error:error])
-    {
-        return nil;
-    }
+    memcpy(iv, a, sizeof(AKWAesKeyWrap64BitRawValueType));
 
-    // Let m = the MLI value extracted from A.
-    // Let P = P[1] | P[2] | ... | P[n].
-    // For i = 1, ... , m
-    //     Q[i] = LSB(8, MSB(8*i, P))
-    AKWAesKeyWrapUInt32BitType mli = [AKWAesKeyWrap messageLengthIndicatorInAlternativeInitialValue:a];
-
-    return [NSData dataWithBytes:paddedBytes length:mli];
+    return [NSData dataWithBytes:r length:length];
 }
 
-#pragma mark - Private class methods
-
-+ (BOOL)isPlainDataValid:(NSData *)plainData error:(NSError **)error
++ (BOOL)canPlainDataBeWrapped:(NSData *)plainData error:(NSError **)error
 {
     if (plainData.length < kPlainDataMinSize)
     {
@@ -303,7 +399,32 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         return NO;
     }
 
-    if (plainData.length > kPlainDataMaxSize)
+    if (plainData.length % sizeof(AKWAesKeyWrap64BitRawValueType) != 0)
+    {
+        if (error)
+        {
+            *error = [AKWErrorFactory errorInputDataNotAlignedProperly];
+        }
+
+        return NO;
+    }
+
+    return YES;
+}
+
++ (BOOL)canPlainDataBeWrappedWithPadding:(NSData *)plainData error:(NSError **)error
+{
+    if (plainData.length < kWrapWithPaddingPlainDataMinSize)
+    {
+        if (error)
+        {
+            *error = [AKWErrorFactory errorInputDataTooSmall];
+        }
+
+        return NO;
+    }
+
+    if (plainData.length > kWrapWithPaddingPlainDataMaxSize)
     {
         if (error)
         {
@@ -316,7 +437,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     return YES;
 }
 
-+ (BOOL)isCipheredDataValid:(NSData *)cipheredData error:(NSError **)error
++ (BOOL)canCipheredDataBeUnwrapped:(NSData *)cipheredData error:(NSError **)error
 {
     if (cipheredData.length < kCipheredDataMinSize)
     {
@@ -328,7 +449,32 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         return NO;
     }
 
-    if (cipheredData.length > kCipheredDataMaxSize)
+    if (cipheredData.length % sizeof(AKWAesKeyWrap64BitRawValueType) != 0)
+    {
+        if (error)
+        {
+            *error = [AKWErrorFactory errorInputDataNotAlignedProperly];
+        }
+
+        return NO;
+    }
+
+    return YES;
+}
+
++ (BOOL)canCipheredDataBeUnwrappedWithPadding:(NSData *)cipheredData error:(NSError **)error
+{
+    if (cipheredData.length < kWrapWithPaddingCipheredDataMinSize)
+    {
+        if (error)
+        {
+            *error = [AKWErrorFactory errorInputDataTooSmall];
+        }
+
+        return NO;
+    }
+
+    if (cipheredData.length > kWrapWithPaddingCipheredDataMaxSize)
     {
         if (error)
         {
@@ -381,7 +527,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     {
         if (error)
         {
-            *error = [AKWErrorFactory errorIntegrityCheckingOfAlternativeInitialValueFailed];
+            *error = [AKWErrorFactory errorIntegrityCheckingOfInitialValueFailed];
         }
 
         return NO;
@@ -396,7 +542,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     {
         if (error)
         {
-            *error = [AKWErrorFactory errorIntegrityCheckingOfAlternativeInitialValueFailed];
+            *error = [AKWErrorFactory errorIntegrityCheckingOfInitialValueFailed];
         }
 
         return NO;
@@ -413,7 +559,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
         {
             if (error)
             {
-                *error = [AKWErrorFactory errorIntegrityCheckingOfAlternativeInitialValueFailed];
+                *error = [AKWErrorFactory errorIntegrityCheckingOfInitialValueFailed];
             }
 
             return NO;
@@ -600,7 +746,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 + (BOOL)get64BitValue:(AKWAesKeyWrap64BitRawValueType)buffer
  byMultipliyingUInt32:(AKWAesKeyWrapUInt32BitType)value1
            withUInt32:(AKWAesKeyWrapUInt32BitType)value2
-      andAddingUInt32:(AKWAesKeyWrapUInt32BitType)value3
+        andAddingSize:(AKWAesKeyWrapSizeType)value3
                 error:(NSError **)error
 {
     if ([AKWAesKeyWrap doesUInt64OverflowByMultipliyingUInt32:value1 andUInt32:value2])
@@ -615,7 +761,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     AKWAesKeyWrapUInt64BitType multipliedValue = ((AKWAesKeyWrapUInt64BitType)value1 *
                                                   (AKWAesKeyWrapUInt64BitType)value2);
 
-    if ([AKWAesKeyWrap doesUInt64OverflowByByAddingUInt32:value3 toUInt64:multipliedValue])
+    if ([AKWAesKeyWrap doesUInt64OverflowByByAddingSize:value3 toUInt64:multipliedValue])
     {
         if (error)
         {
@@ -640,12 +786,12 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     return ((kUInt64BitMax / value1) < value2);
 }
 
-+ (BOOL)doesUInt64OverflowByByAddingUInt32:(AKWAesKeyWrapUInt32BitType)uint32Value
-                                  toUInt64:(AKWAesKeyWrapUInt64BitType)uint64Value
++ (BOOL)doesUInt64OverflowByByAddingSize:(AKWAesKeyWrapSizeType)sizeValue
+                                toUInt64:(AKWAesKeyWrapUInt64BitType)uint64Value
 {
     // NOTE: Compiler will automatically convert both operands to the wider type.
 
-    return (uint32Value > (kUInt64BitMax - uint64Value));
+    return (sizeValue > (kUInt64BitMax - uint64Value));
 }
 
 + (BOOL)doesSizeOverflowByByAddingUInt32:(AKWAesKeyWrapUInt32BitType)value1
@@ -654,14 +800,6 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     // NOTE: Compiler will automatically convert both operands to the wider type.
 
     return (value1 > (kSizeMax - value2));
-}
-
-+ (BOOL)doesSizeOverflowByBySubtractingUInt32:(AKWAesKeyWrapUInt32BitType)value1
-                                     toUInt64:(AKWAesKeyWrapUInt64BitType)value2
-{
-    // NOTE: Compiler will automatically convert both operands to the wider type.
-
-    return ((value2 - value1) > kSizeMax);
 }
 
 + (void)get64BitXorValue:(AKWAesKeyWrap64BitRawValueType)buffer

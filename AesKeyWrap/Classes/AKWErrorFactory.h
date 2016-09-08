@@ -25,8 +25,8 @@ typedef NS_ENUM(NSInteger, AKWErrorFactoryType) {
     AKWErrorFactoryTypeEncryptionFailed,
     /** @see [AKWErrorFactory errorOverflow] */
     AKWErrorFactoryTypeOverflow,
-    /** @see [AKWErrorFactory errorIntegrityCheckingOfAlternativeInitialValueFailed] */
-    AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed
+    /** @see [AKWErrorFactory errorIntegrityCheckingOfInitialValueFailed] */
+    AKWErrorFactoryTypeIntegrityCheckingOfInitialValueFailed
 };
 
 /**
@@ -60,9 +60,9 @@ extern NSString * const AKWErrorFactoryDomain;
 + (NSError *)errorOverflow;
 
 /**
- Returned when the deciphered data does not pass the verification described in RFC 5649, for example, when the Key Encryption Key provided was not the original one
+ Returned when the deciphered data does not pass the verification described in RFC 3394 or RFC 5649, for example, when the Key Encryption Key provided was not the original one
  */
-+ (NSError *)errorIntegrityCheckingOfAlternativeInitialValueFailed;
++ (NSError *)errorIntegrityCheckingOfInitialValueFailed;
 
 @end
 

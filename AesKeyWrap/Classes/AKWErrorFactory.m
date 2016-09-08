@@ -56,10 +56,10 @@ NSString * const AKWErrorFactoryDomain = @"AKWErrorFactoryDomain";
                            userInfo:nil];
 }
 
-+ (NSError *)errorIntegrityCheckingOfAlternativeInitialValueFailed
++ (NSError *)errorIntegrityCheckingOfInitialValueFailed
 {
     return [NSError errorWithDomain:AKWErrorFactoryDomain
-                               code:AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed
+                               code:AKWErrorFactoryTypeIntegrityCheckingOfInitialValueFailed
                            userInfo:nil];
 }
 

@@ -18,10 +18,10 @@
 
 @implementation AKWAesKeyWrapTest
 
-- (void)testEmptyPlainDataAndValidKek_wrapPlainData_returnError
+- (void)testTooSmallPlainDataAndValidKek_wrapPlainData_returnError
 {
     // given
-    NSData *plainData = [self emptyData];
+    NSData *plainData = [self anyTooSmallPlainData];
     NSData *kek = [self anyValidKeyEncryptionKey];
 
     // when
@@ -36,10 +36,29 @@
     XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataTooSmall);
 }
 
-- (void)testEmptyCipheredDataAndValidKek_unwrapCipheredData_returnError
+- (void)testNotAlignedPlainDataAndValidKek_wrapPlainData_returnError
 {
     // given
-    NSData *cipheredData = [self emptyData];
+    NSData *plainData = [self anyNotAlignedPlainData];
+    NSData *kek = [self anyValidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
+                                                     withKeyEncryptionKey:kek
+                                                                    error:&error];
+
+
+    // then
+    XCTAssertNil(cipheredData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataNotAlignedProperly);
+}
+
+- (void)testTooSmallCipheredDataAndValidKek_unwrapCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self anyTooSmallCipheredData];
     NSData *kek = [self anyValidKeyEncryptionKey];
 
     // when
@@ -57,7 +76,7 @@
 - (void)testNotAlignedCipheredDataAndValidKek_unwrapCipheredData_returnError
 {
     // given
-    NSData *cipheredData = [self anyNotAlignedCipherData];
+    NSData *cipheredData = [self anyNotAlignedCipheredData];
     NSData *kek = [self anyValidKeyEncryptionKey];
 
     // when
@@ -72,10 +91,10 @@
     XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataNotAlignedProperly);
 }
 
-- (void)testValidPlainDataAndInvalidKek_wrapPlainData_returnError
+- (void)testPlainDataAndInvalidKek_wrapPlainData_returnError
 {
     // given
-    NSData *plainData = [self anyValidPlainData];
+    NSData *plainData = [self anyPlainData];
     NSData *kek = [self anyInvalidKeyEncryptionKey];
 
     // when
@@ -90,10 +109,10 @@
     XCTAssertEqual(error.code, AKWErrorFactoryTypeInvalidKeyEncryptionKey);
 }
 
-- (void)testValidCipheredDataAndInvalidKek_unwrapCipheredData_returnError
+- (void)testCipheredDataAndInvalidKek_unwrapCipheredData_returnError
 {
     // given
-    NSData *cipheredData = [self anyValidCipheredData];
+    NSData *cipheredData = [self anyCipheredData];
     NSData *kek = [self anyInvalidKeyEncryptionKey];
 
     // when
@@ -108,11 +127,11 @@
     XCTAssertEqual(error.code, AKWErrorFactoryTypeInvalidKeyEncryptionKey);
 }
 
-- (void)test20OctetsPlainDataAnd192BitKek_wrapPlainData_returnExpectedCipheredData
+- (void)test128BitsPlainDataAnd128BitKek_wrapPlainData_returnExpectedCipheredData
 {
     // given
-    NSData *plainData = [self dataWithHexString:@"c37b7e6492584340 bed1220780894115 5068f738"];
-    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F"];
 
     // when
     NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
@@ -120,16 +139,16 @@
                                                                     error:nil];
 
     // then
-    NSData *expectedCipheredData = [self dataWithHexString:@"138bdeaa9b8fa7fc 61f97742e72248ee 5ae6ae5360d1ae6a 5f54f373fa543b6a"];
+    NSData *expectedCipheredData = [self dataWithHexString:@"1FA68B0A8112B447 AEF34BD8FB5A7B82 9D3E862371D2CFE5"];
 
     XCTAssertEqualObjects(cipheredData, expectedCipheredData);
 }
 
-- (void)testCipheredDataAnd192BitKek_unwrapCipheredData_returnExpected20OctetsPlainData
+- (void)testCipheredDataAnd128BitKek_unwrapCipheredData_returnExpected128BitsPlainData
 {
     // given
-    NSData *cipheredData = [self dataWithHexString:@"138bdeaa9b8fa7fc 61f97742e72248ee 5ae6ae5360d1ae6a 5f54f373fa543b6a"];
-    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+    NSData *cipheredData = [self dataWithHexString:@"1FA68B0A8112B447 AEF34BD8FB5A7B82 9D3E862371D2CFE5"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F"];
 
     // when
     NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
@@ -137,16 +156,16 @@
                                                                    error:nil];
 
     // then
-    NSData *expectedPlainData = [self dataWithHexString:@"c37b7e6492584340 bed1220780894115 5068f738"];
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
 
     XCTAssertEqualObjects(plainData, expectedPlainData);
 }
 
-- (void)test7OctetsPlainDataAnd192BitKek_wrapPlainData_returnExpectedCipheredData
+- (void)test128BitsPlainDataAnd192BitKek_wrapPlainData_returnExpectedCipheredData
 {
     // given
-    NSData *plainData = [self dataWithHexString:@"466f7250617369"];
-    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F1011121314151617"];
 
     // when
     NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
@@ -154,16 +173,16 @@
                                                                     error:nil];
 
     // then
-    NSData *expectedCipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
+    NSData *expectedCipheredData = [self dataWithHexString:@"96778B25AE6CA435 F92B5B97C050AED2 468AB8A17AD84E5D"];
 
     XCTAssertEqualObjects(cipheredData, expectedCipheredData);
 }
 
-- (void)testCipheredDataAnd192BitKek_unwrapCipheredData_returnExpected7OctetsPlainData
+- (void)testCipheredDataAnd192BitKek_unwrapCipheredData_returnExpected128BitsPlainData
 {
     // given
-    NSData *cipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
-    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+    NSData *cipheredData = [self dataWithHexString:@"96778B25AE6CA435 F92B5B97C050AED2 468AB8A17AD84E5D"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F1011121314151617"];
 
     // when
     NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
@@ -171,16 +190,152 @@
                                                                    error:nil];
 
     // then
-    NSData *expectedPlainData = [self dataWithHexString:@"466f7250617369"];
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
 
     XCTAssertEqualObjects(plainData, expectedPlainData);
 }
 
-- (void)testCipheredDataAnd192BitUnrelatedKek_unwrapCipheredData_returnError
+- (void)test128BitsPlainDataAnd256BitKek_wrapPlainData_returnExpectedCipheredData
 {
     // given
-    NSData *cipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
-    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176aa"];
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
+                                                     withKeyEncryptionKey:kek
+                                                                    error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"64E8C3F9CE0F5BA2 63E9777905818A2A 93C8191E7D6E8AE7"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd256BitKek_unwrapCipheredData_returnExpected128BitsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"64E8C3F9CE0F5BA2 63E9777905818A2A 93C8191E7D6E8AE7"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
+                                                    withKeyEncryptionKey:kek
+                                                                   error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)test192BitsPlainDataAnd192BitKek_wrapPlainData_returnExpectedCipheredData
+{
+    // given
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF0001020304050607"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F1011121314151617"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
+                                                     withKeyEncryptionKey:kek
+                                                                    error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"031D33264E15D332 68F24EC260743EDC E1C6C7DDEE725A93 6BA814915C6762D2"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd192BitKek_unwrapCipheredData_returnExpected192BitsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"031D33264E15D332 68F24EC260743EDC E1C6C7DDEE725A93 6BA814915C6762D2"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F1011121314151617"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
+                                                    withKeyEncryptionKey:kek
+                                                                   error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF0001020304050607"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)test192BitsPlainDataAnd256BitKek_wrapPlainData_returnExpectedCipheredData
+{
+    // given
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF0001020304050607"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
+                                                     withKeyEncryptionKey:kek
+                                                                    error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"A8F9BC1612C68B3F F6E6F4FBE30E71E4 769C8B80A32CB895 8CD5D17D6B254DA1"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd256BitKek_unwrapCipheredData_returnExpected192BitsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"A8F9BC1612C68B3F F6E6F4FBE30E71E4 769C8B80A32CB895 8CD5D17D6B254DA1"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
+                                                    withKeyEncryptionKey:kek
+                                                                   error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF0001020304050607"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)test256BitsPlainDataAnd256BitKek_wrapPlainData_returnExpectedCipheredData
+{
+    // given
+    NSData *plainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF000102030405060708090A0B0C0D0E0F"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:plainData
+                                                     withKeyEncryptionKey:kek
+                                                                    error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"28C9F404C4B810F4 CBCCB35CFB87F826 3F5786E2D80ED326 CBC7F0E71A99F43B FB988B9B7A02DD21"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd256BitKek_unwrapCipheredData_returnExpected256BitsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"28C9F404C4B810F4 CBCCB35CFB87F826 3F5786E2D80ED326 CBC7F0E71A99F43B FB988B9B7A02DD21"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
+                                                    withKeyEncryptionKey:kek
+                                                                   error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"00112233445566778899AABBCCDDEEFF000102030405060708090A0B0C0D0E0F"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)testCipheredDataAnd256BitUnrelatedKek_unwrapCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"28C9F404C4B810F4 CBCCB35CFB87F826 3F5786E2D80ED326 CBC7F0E71A99F43B FB988B9B7A02DD21"];
+    NSData *kek = [self dataWithHexString:@"000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E10"];
 
     // when
     NSError *error = nil;
@@ -191,7 +346,183 @@
     // then
     XCTAssertNil(plainData);
     XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
-    XCTAssertEqual(error.code, AKWErrorFactoryTypeIntegrityCheckingOfAlternativeInitialValueFailed);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeIntegrityCheckingOfInitialValueFailed);
+}
+
+- (void)testEmptyPlainDataAndValidKek_wrapWithPaddingPlainData_returnError
+{
+    // given
+    NSData *plainData = [self emptyData];
+    NSData *kek = [self anyValidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingWithPaddingPlainData:plainData
+                                                               usingKeyEncryptionKey:kek
+                                                                               error:&error];
+
+    // then
+    XCTAssertNil(cipheredData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataTooSmall);
+}
+
+- (void)testEmptyCipheredDataAndValidKek_unwrapWithPaddingCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self emptyData];
+    NSData *kek = [self anyValidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:&error];
+
+    // then
+    XCTAssertNil(plainData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataTooSmall);
+}
+
+- (void)testNotAlignedCipheredDataAndValidKek_unwrapWithPaddingCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self anyNotAlignedCipheredDataToUnwrapWithPadding];
+    NSData *kek = [self anyValidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:&error];
+
+    // then
+    XCTAssertNil(plainData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInputDataNotAlignedProperly);
+}
+
+- (void)testPlainDataAndInvalidKek_wrapWithPaddingPlainData_returnError
+{
+    // given
+    NSData *plainData = [self anyPlainDataToWrapWithPadding];
+    NSData *kek = [self anyInvalidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingWithPaddingPlainData:plainData
+                                                               usingKeyEncryptionKey:kek
+                                                                               error:&error];
+
+    // then
+    XCTAssertNil(cipheredData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInvalidKeyEncryptionKey);
+}
+
+- (void)testCipheredDataAndInvalidKek_unwrapWithPaddingCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self anyCipheredDataToUnwrapWithPadding];
+    NSData *kek = [self anyInvalidKeyEncryptionKey];
+
+    // when
+    NSError *error = nil;
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:&error];
+
+    // then
+    XCTAssertNil(plainData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeInvalidKeyEncryptionKey);
+}
+
+- (void)test20OctetsPlainDataAnd192BitKek_wrapWithPaddingPlainData_returnExpectedCipheredData
+{
+    // given
+    NSData *plainData = [self dataWithHexString:@"c37b7e6492584340 bed1220780894115 5068f738"];
+    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingWithPaddingPlainData:plainData
+                                                               usingKeyEncryptionKey:kek
+                                                                               error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"138bdeaa9b8fa7fc 61f97742e72248ee 5ae6ae5360d1ae6a 5f54f373fa543b6a"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd192BitKek_unwrapWithPaddingCipheredData_returnExpected20OctetsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"138bdeaa9b8fa7fc 61f97742e72248ee 5ae6ae5360d1ae6a 5f54f373fa543b6a"];
+    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"c37b7e6492584340 bed1220780894115 5068f738"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)test7OctetsPlainDataAnd192BitKek_wrapWithPaddingPlainData_returnExpectedCipheredData
+{
+    // given
+    NSData *plainData = [self dataWithHexString:@"466f7250617369"];
+    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+
+    // when
+    NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingWithPaddingPlainData:plainData
+                                                               usingKeyEncryptionKey:kek
+                                                                               error:nil];
+
+    // then
+    NSData *expectedCipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
+
+    XCTAssertEqualObjects(cipheredData, expectedCipheredData);
+}
+
+- (void)testCipheredDataAnd192BitKek_unwrapWithPaddingCipheredData_returnExpected7OctetsPlainData
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
+    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176a8"];
+
+    // when
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:nil];
+
+    // then
+    NSData *expectedPlainData = [self dataWithHexString:@"466f7250617369"];
+
+    XCTAssertEqualObjects(plainData, expectedPlainData);
+}
+
+- (void)testCipheredDataAnd192BitUnrelatedKek_unwrapWithPaddingCipheredData_returnError
+{
+    // given
+    NSData *cipheredData = [self dataWithHexString:@"afbeb0f07dfbf541 9200f2ccb50bb24f"];
+    NSData *kek = [self dataWithHexString:@"5840df6e29b02af1 ab493b705bf16ea1 ae8338f4dcc176aa"];
+
+    // when
+    NSError *error = nil;
+    NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                              usingKeyEncryptionKey:kek
+                                                                              error:&error];
+
+    // then
+    XCTAssertNil(plainData);
+    XCTAssertEqualObjects(error.domain, AKWErrorFactoryDomain);
+    XCTAssertEqual(error.code, AKWErrorFactoryTypeIntegrityCheckingOfInitialValueFailed);
 }
 
 #pragma mark - Private methods
@@ -201,25 +532,76 @@
     return [NSData data];
 }
 
-- (NSData *)anyValidPlainData
-{
-    u_char bytes[1];
-
-    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
-}
-
-- (NSData *)anyValidCipheredData
+- (NSData *)anyPlainData
 {
     u_char bytes[2 * sizeof(uint64_t)];
 
     return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
-- (NSData *)anyNotAlignedCipherData
+- (NSData *)anyCipheredData
 {
-    u_char bytes[(2 * sizeof(uint64_t)) + 1];
+    u_char bytes[3 * sizeof(uint64_t)];
 
     return [NSData dataWithBytes:bytes length:sizeof(bytes)];
+}
+
+- (NSData *)anyTooSmallPlainData
+{
+    NSData *validData = [self anyPlainData];
+
+    return [validData subdataWithRange:NSMakeRange(0, validData.length - 1)];
+}
+
+- (NSData *)anyNotAlignedPlainData
+{
+    NSData *validData = [self anyPlainData];
+
+    NSMutableData *data = [NSMutableData dataWithData:validData];
+    [data appendData:validData];
+
+    return [data subdataWithRange:NSMakeRange(0, data.length - 1)];
+}
+
+- (NSData *)anyTooSmallCipheredData
+{
+    NSData *validData = [self anyCipheredData];
+
+    return [validData subdataWithRange:NSMakeRange(0, validData.length - 1)];
+}
+
+- (NSData *)anyNotAlignedCipheredData
+{
+    NSData *validData = [self anyCipheredData];
+
+    NSMutableData *data = [NSMutableData dataWithData:validData];
+    [data appendData:validData];
+
+    return [data subdataWithRange:NSMakeRange(0, data.length - 1)];
+}
+
+- (NSData *)anyPlainDataToWrapWithPadding
+{
+    u_char bytes[1];
+
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
+}
+
+- (NSData *)anyCipheredDataToUnwrapWithPadding
+{
+    u_char bytes[2 * sizeof(uint64_t)];
+
+    return [NSData dataWithBytes:bytes length:sizeof(bytes)];
+}
+
+- (NSData *)anyNotAlignedCipheredDataToUnwrapWithPadding
+{
+    NSData *validData = [self anyCipheredDataToUnwrapWithPadding];
+
+    NSMutableData *data = [NSMutableData dataWithData:validData];
+    [data appendData:validData];
+
+    return [data subdataWithRange:NSMakeRange(0, data.length - 1)];
 }
 
 - (NSData *)anyValidKeyEncryptionKey
