@@ -68,7 +68,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     }
 
     // 1) Cipher padded plain data
-    return [AKWAesKeyWrap cipheredDataByWrappingPaddedPlainBytes:plainData.bytes
+    return [AKWAesKeyWrap cipheredDataByWrappingPaddedPlainBytes:(AKWAesKeyWrap8BitRawValueType *)plainData.bytes
                                                       withLength:plainData.length
                                            usingKeyEncryptionKey:kek
                                                     initialValue:kIVConstant
@@ -87,7 +87,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
     // 1) Decipher data
     AKWAesKeyWrap64BitRawValueType iv;
-    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:cipheredData.bytes
+    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:(AKWAesKeyWrap8BitRawValueType *)cipheredData.bytes
                                                                      withLength:cipheredData.length
                                                           usingKeyEncryptionKey:kek
                                                           returningInitialValue:iv
@@ -162,7 +162,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
     // 1) Decipher data
     AKWAesKeyWrap64BitRawValueType aiv;
-    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:cipheredData.bytes
+    NSData *plainData = [AKWAesKeyWrap paddedPlainDataByUnwrappingCipheredBytes:(AKWAesKeyWrap8BitRawValueType *)cipheredData.bytes
                                                                      withLength:cipheredData.length
                                                           usingKeyEncryptionKey:kek
                                                           returningInitialValue:aiv
@@ -175,7 +175,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     // 2) Output results.
     // If A is an appropriate initial value
     if (![AKWAesKeyWrap alternativeInitialValue:aiv
-                          isValidForPaddedBytes:plainData.bytes
+                          isValidForPaddedBytes:(AKWAesKeyWrap8BitRawValueType *)plainData.bytes
                                      withLength:plainData.length
                                           error:error])
     {
@@ -196,7 +196,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 + (nullable NSData *)cipheredDataByWrappingPaddedPlainBytes:(AKWAesKeyWrap8BitRawValueType *)paddedPlainBytes
                                                  withLength:(AKWAesKeyWrapSizeType)paddedPlainBytesLength
                                       usingKeyEncryptionKey:(NSData *)kek
-                                               initialValue:(AKWAesKeyWrap64BitRawValueType)iv
+                                               initialValue:(const AKWAesKeyWrap64BitRawValueType)iv
                                                       error:(NSError **)error
 {
     // 0) Check input
@@ -263,7 +263,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 
                 AKWAesKeyWrap64BitRawValueType t;
                 if (![AKWAesKeyWrap get64BitValue:t
-                             byMultipliyingUInt32:n
+                               byMultipliyingSize:n
                                        withUInt32:j
                                     andAddingSize:(i + 1)
                                             error:error])
@@ -349,7 +349,7 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
                 // B = AES-1(K, (A ^ t) | R[i]) where t = n*j+i
                 AKWAesKeyWrap64BitRawValueType t;
                 if (![AKWAesKeyWrap get64BitValue:t
-                             byMultipliyingUInt32:n
+                               byMultipliyingSize:n
                                        withUInt32:(j - 1)
                                     andAddingSize:i
                                             error:error])
@@ -744,12 +744,12 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
 }
 
 + (BOOL)get64BitValue:(AKWAesKeyWrap64BitRawValueType)buffer
- byMultipliyingUInt32:(AKWAesKeyWrapUInt32BitType)value1
+   byMultipliyingSize:(AKWAesKeyWrapSizeType)value1
            withUInt32:(AKWAesKeyWrapUInt32BitType)value2
         andAddingSize:(AKWAesKeyWrapSizeType)value3
                 error:(NSError **)error
 {
-    if ([AKWAesKeyWrap doesUInt64OverflowByMultipliyingUInt32:value1 andUInt32:value2])
+    if ([AKWAesKeyWrap doesUInt64OverflowByMultipliyingSize:value1 andUInt32:value2])
     {
         if (error)
         {
@@ -778,8 +778,8 @@ static const AKWAesKeyWrap32BitRawValueType kAIV32BitConstant = {0xA6, 0x59, 0x5
     return YES;
 }
 
-+ (BOOL)doesUInt64OverflowByMultipliyingUInt32:(AKWAesKeyWrapUInt32BitType)value1
-                                     andUInt32:(AKWAesKeyWrapUInt32BitType)value2
++ (BOOL)doesUInt64OverflowByMultipliyingSize:(AKWAesKeyWrapSizeType)value1
+                                   andUInt32:(AKWAesKeyWrapUInt32BitType)value2
 {
     // NOTE: Compiler will automatically convert both operands to the wider type.
 
