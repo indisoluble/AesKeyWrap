@@ -6,9 +6,8 @@
 [![Docs](https://img.shields.io/cocoapods/metrics/doc-percent/AesKeyWrap.svg)](http://cocoadocs.org/docsets/AesKeyWrap)
 [![License](https://img.shields.io/cocoapods/l/AesKeyWrap.svg?style=flat)](http://cocoapods.org/pods/AesKeyWrap)
 
-ObjC implementation of the AES Key Wrap with Padding Algorithm described in
-[RFC 3394](https://tools.ietf.org/html/rfc3394) &
-[RFC 5649](https://tools.ietf.org/html/rfc5649).
+ObjC implementation of the AES Key Wrap ([RFC 3394](https://tools.ietf.org/html/rfc3394)) and
+AES Key Wrap with Padding ([RFC 5649](https://tools.ietf.org/html/rfc5649)) algorithms.
 
 ## Installation
 
@@ -26,19 +25,36 @@ pod "AesKeyWrap"
 
 #import "AKWAesKeyWrap.h"
 
-u_char buffer[kCCKeySizeAES192] = {...};
-NSData *keyEncryptionKey = [NSData dataWithBytes:buffer length:kCCKeySizeAES192];
+u_char keyBytes[kCCKeySizeAES192] = {...};
+NSData *keyEncryptionKey = [NSData dataWithBytes:keyBytes length:kCCKeySizeAES192];
 
-NSString *txt = @"Some text";
+// AES Key Wrap
 
-NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:[txt dataUsingEncoding:NSUTF8StringEncoding]
+u_char plainBytes[2 * sizeof(uint64_t)] = {...};
+NSData *expectedPlainData = [NSData dataWithBytes:plainBytes length:sizeof(plainBytes)];
+
+NSData *cipheredData = [AKWAesKeyWrap cipheredDataByWrappingPlainData:expectedPlainData
                                                  withKeyEncryptionKey:keyEncryptionKey
                                                                 error:nil];
 NSData *plainData = [AKWAesKeyWrap plainDataByUnwrappingCipheredData:cipheredData
                                                 withKeyEncryptionKey:keyEncryptionKey
                                                                error:nil];
 
-XCTAssertEqualObjects([txt dataUsingEncoding:NSUTF8StringEncoding], plainData);
+XCTAssertEqualObjects(expectedPlainData, plainData);
+
+// AES Key Wrap with Padding
+
+u_char plainBytesWithPadding[1] = {...};
+expectedPlainData = [NSData dataWithBytes:plainBytesWithPadding length:sizeof(plainBytesWithPadding)];
+
+cipheredData = [AKWAesKeyWrap cipheredDataByWrappingWithPaddingPlainData:expectedPlainData
+                                                   usingKeyEncryptionKey:keyEncryptionKey
+                                                                   error:nil];
+plainData = [AKWAesKeyWrap plainDataByUnwrappingWithPaddingCipheredData:cipheredData
+                                                  usingKeyEncryptionKey:keyEncryptionKey
+                                                                  error:nil];
+
+XCTAssertEqualObjects(expectedPlainData, plainData);
 ```
 
 ## License

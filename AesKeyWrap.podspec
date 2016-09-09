@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name             = 'AesKeyWrap'
-  s.version          = '0.1.8'
-  s.summary          = 'AES Key Wrap with Padding Algorithm (RFC 3394 & RFC 5649).'
+  s.version          = '1.1.0'
+  s.summary          = 'AES Key Wrap and AES Key Wrap with Padding algorithms (RFC 3394 & RFC 5649).'
 
   s.description      = <<-DESC
-ObjC implementation of the AES Key Wrap with Padding Algorithm described in RFC 3394 & RFC 5649.
+ObjC implementation of the AES Key Wrap and AES Key Wrap with Padding algorithms (RFC 3394 & RFC 5649).
                        DESC
 
   s.homepage         = 'https://github.com/indisoluble/AesKeyWrap'
