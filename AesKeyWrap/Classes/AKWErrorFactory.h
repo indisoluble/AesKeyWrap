@@ -39,13 +39,13 @@ extern NSString * const AKWErrorFactoryDomain;
 
 @interface AKWErrorFactory : NSObject
 
-/** Returned when the plain data is not at least 1 byte or the encryption data is less than 16 bytes */
+/** Returned when the input data to cipher or decipher does not have the minimum required size */
 + (NSError *)errorInputDataTooSmall;
 
-/** Returned when the input data is bigger than the methods can handle, for example, the input data can not be bigger than 2^32 bytes */
+/** Returned when the input data is bigger than the methods can handle */
 + (NSError *)errorInputDataTooBig;
 
-/** Returned when the ciphered input data is not a multiple of 64 bits */
+/** Returned when the input data is not a multiple of 64 bits */
 + (NSError *)errorInputDataNotAlignedProperly;
 
 /** Returned when the Key Encryption Key does not have the right size: kCCKeySizeAES128 (16), kCCKeySizeAES192 (24) or kCCKeySizeAES256 (32) bytes */

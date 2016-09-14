@@ -9,6 +9,15 @@
 ObjC implementation of the AES Key Wrap ([RFC 3394](https://tools.ietf.org/html/rfc3394)) and
 AES Key Wrap with Padding ([RFC 5649](https://tools.ietf.org/html/rfc5649)) algorithms.
 
+## Notice
+
+CommonCrypto already offers a couple of functions that implement [RFC 3394](https://tools.ietf.org/html/rfc3394):
+* CCSymmetricKeyWrap
+* CCSymmetricKeyUnwrap
+
+However, it does not offer any functions to wrap with padding ([RFC 5649](https://tools.ietf.org/html/rfc5649)) ... yet.
+  
+
 ## Installation
 
 AesKeyWrap is available through [CocoaPods](http://cocoapods.org). To install
